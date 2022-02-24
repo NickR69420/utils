@@ -1,4 +1,4 @@
-# `@nicky/utils`
+# `@nickdoespackages/utils`
 
 Utility for the Nicky bot, but can be used by all!
 
@@ -8,7 +8,7 @@ Easily register slash commands and menus for bot!
 
 ```ts
 import { Client } from 'discord.js';
-import { SlashCreator } from '@nicky/utils';
+import { SlashCreator } from '@nickdoespackages/utils';
 
 const client = new Client({ intents: 32767 });
 

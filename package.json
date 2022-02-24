@@ -1,5 +1,5 @@
 {
-  "name": "@nicky/utils",
+  "name": "@nickdoespackages/utils",
   "version": "1.0.0",
   "description": "utils for Nicky bot",
   "main": "dist/src/index.js",
