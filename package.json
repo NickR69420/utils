@@ -1,0 +1,36 @@
+{
+  "name": "@nicky/utils",
+  "version": "1.0.0",
+  "description": "utils for Nicky bot",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "ts-node-dev tests/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NickR69420/utils.git"
+  },
+  "keywords": [
+    "cool"
+  ],
+  "author": "NickR69420",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/NickR69420/utils/issues"
+  },
+  "homepage": "https://github.com/NickR69420/utils#readme",
+  "devDependencies": {
+    "@nickdoespackages/prettier-config": "^1.0.1",
+    "@nickdoespackages/ts-config": "^1.0.1",
+    "ts-node-dev": "^1.1.8"
+  },
+  "dependencies": {
+    "@sapphire/time-utilities": "^1.6.0",
+    "discord.js": "^13.6.0",
+    "dobro-utils": "^1.0.1",
+    "hastebin": "^0.2.1"
+  },
+  "prettier": "@nickdoespackages/prettier-config/v2"
+}
