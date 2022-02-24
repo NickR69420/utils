@@ -2,7 +2,8 @@
 	"extends": "@nickdoespackages/ts-config",
 	"compilerOptions": {
 		"outDir": "dist",
-		"rootDir": "./"
+		"rootDir": "./",
+		"declaration": true
 	},
 	"include": ["src"]
 }
