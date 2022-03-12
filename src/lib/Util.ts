@@ -4,8 +4,8 @@ import { Duration } from '@sapphire/time-utilities';
 import { createPaste } from 'hastebin';
 
 export class Util extends Utils {
-	client: Client;
-	constructor(client: Client) {
+	public client: Client;
+	public constructor(client: Client) {
 		super();
 
 		this.client = client;

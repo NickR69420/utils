@@ -2,8 +2,8 @@ import { ApplicationCommandData, BaseApplicationCommandOptionsData, ChatInputApp
 
 export class SlashCreator {
 	/** Discord Client. */
-	client: Client;
-	constructor(client: Client) {
+	public client: Client;
+	public constructor(client: Client) {
 		this.client = client;
 	}
 
