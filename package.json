@@ -1,7 +1,7 @@
 {
   "name": "@nickdoespackages/utils",
   "version": "1.0.3",
-  "description": "utils for Nicky bot",
+  "description": "Just some discord bot utilities.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
@@ -27,10 +27,12 @@
     "ts-node-dev": "^1.1.8"
   },
   "dependencies": {
-    "@sapphire/time-utilities": "^1.6.0",
+    "@sapphire/time-utilities": "^1.7.1",
     "discord.js": "^13.6.0",
     "dobro-utils": "^1.0.1",
-    "hastebin": "^0.2.1"
+    "hastebin": "^0.2.1",
+    "pretty-ms": "^7.0.1",
+    "quick.db": "^7.1.3"
   },
   "prettier": "@nickdoespackages/prettier-config/v2"
 }
