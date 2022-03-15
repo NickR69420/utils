@@ -119,15 +119,7 @@ export class CooldownManager {
 			const expires = data.expireDate.getTime();
 			const now = Date.now();
 			if (now < expires) {
-				const cooldown: Cooldown = db.set(`${command}-${userId}.remainingTime`, expires);
-
-				return {
-					command,
-					cooldown: cooldown.cooldown,
-					expireDate: new Date(cooldown.expireDate),
-					remainingTime: cooldown.remainingTime,
-					userId,
-				} as Cooldown;
+				return data;
 			}
 		}
 
