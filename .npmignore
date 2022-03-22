@@ -4,3 +4,4 @@ tsconfig.json
 .vscode
 .github
 README.md
+json.sqlite

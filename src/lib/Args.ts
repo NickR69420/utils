@@ -36,7 +36,7 @@ export class Args {
 		this.client = client;
 		this.message = message;
 		this.args = args;
-		this.commandArgs = commandUsage.split(' ');
+		this.commandArgs = typeof commandUsage === 'string' && commandUsage.length > 0 ? commandUsage.split(' ') : null;
 		this.utils = new Util(this.client);
 	}
 
@@ -76,6 +76,8 @@ export class Args {
 	 * Check if there are missing arguments.
 	 */
 	public isMissing() {
+		if (!this.commandArgs) return false;
+
 		if (this.args.length < this.commandArgs.length) return true;
 		else return false;
 	}
