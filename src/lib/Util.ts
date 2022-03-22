@@ -58,7 +58,7 @@ export class Util extends Utils {
 	public async hastebin(content: string) {
 		const url = await createPaste(content, {
 			raw: true,
-			server: 'https://hastebin.com',
+			server: 'https://www.toptal.com/developers/hastebin/',
 		});
 
 		return url;
