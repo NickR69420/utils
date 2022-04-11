@@ -86,6 +86,7 @@ export class Util extends Utils {
 	 * ```
 	 */
 	public getDuration(time: string) {
+		if (!time) return null;
 		return new Duration(time).fromNow || null;
 	}
 
@@ -120,5 +121,9 @@ export class Util extends Utils {
 
 		if (!user) return null;
 		else return user;
+	}
+
+	public formatDate(time: number, type: string): string {
+		return `<t:${Math.floor(time / 1000)}:${type}>`;
 	}
 }
