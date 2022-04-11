@@ -123,7 +123,16 @@ export class Util extends Utils {
 		else return user;
 	}
 
-	public formatDate(time: number, type: string): string {
-		return `<t:${Math.floor(time / 1000)}:${type}>`;
+	public DiscordDate(time: number | Date, type: string): string {
+		let timestamp;
+		if (typeof time !== 'number') {
+			timestamp = Math.floor(time?.getTime() / 1000)
+		} else {
+			timestamp = time
+		}
+
+
+
+		return `<t:${time}:${type}>`
 	}
 }
