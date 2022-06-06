@@ -1,12 +1,13 @@
 {
   "name": "@nickdoespackages/utils",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Just some discord bot utilities.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "ts-node-dev tests/index.ts"
+    "test": "ts-node-dev tests/index.ts",
+    "release": "tsc && npm publish --access=public"
   },
   "repository": {
     "type": "git",
@@ -24,13 +25,16 @@
   "devDependencies": {
     "@nickdoespackages/prettier-config": "^1.0.1",
     "@nickdoespackages/ts-config": "^1.0.1",
+    "@types/glob": "^7.2.0",
     "ts-node-dev": "^1.1.8"
   },
   "dependencies": {
     "@sapphire/time-utilities": "^1.7.1",
+    "axios": "^0.27.2",
     "discord.js": "^13.6.0",
-    "dobro-utils": "^1.0.1",
+    "glob": "^7.2.0",
     "hastebin": "^0.2.1",
+    "ms": "^3.0.0-canary.1",
     "pretty-ms": "^7.0.1",
     "quick.db": "^7.1.3"
   },
