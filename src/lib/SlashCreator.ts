@@ -1,15 +1,15 @@
-import { ApplicationCommandData, BaseApplicationCommandOptionsData, ChatInputApplicationCommandData, Client } from 'discord.js';
+import { ApplicationCommandData, BaseApplicationCommandOptionsData, ChatInputApplicationCommandData, Client, Snowflake } from 'discord.js';
 
 export class SlashCreator {
 	/** Discord Client. */
-	public client: Client;
+	private client: Client;
 	public constructor(client: Client) {
 		this.client = client;
 	}
 
 	public async syncGuildCommands(commands: ChatInputApplicationCommandData[], guildId: string) {
 		const mainGuild = await this.client.guilds.fetch(guildId);
-		if (!mainGuild) throw new Error('[nicky-utils] Invalid guildId provided.');
+		if (!mainGuild) throw new Error('[Slash Creator] Invalid guildId provided.');
 
 		let guildCommands = await mainGuild.commands.fetch();
 		if (!guildCommands) return;
@@ -51,7 +51,7 @@ export class SlashCreator {
 		const { application } = this.client;
 		if (!application)
 			throw new Error(
-				'[nicky-utils] Failed to sync commands globally as application is not available. (Make sure to run this function only after the client is ready.)'
+				'[Slash Creator] Failed to sync commands globally as application is not available. (Make sure to run this function only after the client is ready.)'
 			);
 
 		let appCommands = await application.commands.fetch();
@@ -129,7 +129,7 @@ export class SlashCreator {
 		const { application } = this.client;
 		if (!application)
 			throw new Error(
-				'[nicky-utils] Failed to sync menus globally as application is not available. (Make sure to run this function only after the client is ready.)'
+				'[Slash Creator] Failed to sync menus globally as application is not available. (Make sure to run this function only after the client is ready.)'
 			);
 
 		let appMenus = await application.commands.fetch();
@@ -161,6 +161,29 @@ export class SlashCreator {
 
 		for (const menu of unHandledMenus) {
 			await application.commands.create(menu);
+		}
+	}
+
+	public async deleteCommands(guildId?: Snowflake) {
+		if (guildId) {
+			const guild = await this.client.guilds.fetch(guildId);
+			if (!guild) throw new Error('[Slash Creator] Invalid guild ID provided.');
+
+			const commands = await guild.commands.fetch();
+			commands.forEach(async (cmd) => {
+				await guild.commands.delete(cmd);
+			});
+		} else {
+			const { application } = this.client;
+			if (!application)
+				throw new Error(
+					'[Slash Creator] Failed to delete commands globally as application is not available. (Make sure to run this function only after the client is ready.)'
+				);
+
+			const commands = await application.commands.fetch();
+			commands.forEach(async (cmd) => {
+				await application.commands.delete(cmd);
+			});
 		}
 	}
 
