@@ -120,30 +120,30 @@ export class Args {
 			else return null;
 		}
 		if (type === 'member') {
-			const member = this.utils.getMember(arg, this.message.guild) ?? this.message.mentions.members.first();
+			const member = this.utils.fetchMember(arg, this.message.guild) ?? this.message.mentions.members.first();
 
 			if (!member) return null;
 			else return this.returnArg(member, type);
 		}
 		if (type === 'role') {
-			const role = this.utils.getRole(arg, this.message.guild) ?? this.message.mentions.roles.first();
+			const role = this.utils.fetchRole(arg, this.message.guild) ?? this.message.mentions.roles.first();
 
 			if (!role) return null;
 			else return this.returnArg(role, type);
 		}
 		if (type === 'TextChannel') {
-			const channel = this.utils.findChannel(arg, this.message.guild) ?? this.message.mentions.channels.first();
+			const channel = this.utils.fetchChannel(arg, this.message.guild) ?? this.message.mentions.channels.first();
 
 			if (!channel || !channel.isText()) return null;
 			else return this.returnArg(channel, type);
 		}
 		if (type === 'VoiceChannel') {
-			const vc = this.message.guild.channels.cache.find((c) => c.name == arg || c.id === arg) ?? this.message.mentions.channels.first();
+			const vc = this.utils.fetchChannel(arg, this.message.guild) ?? this.message.mentions.channels.first();
 
 			if (!vc || !vc.isVoice()) return null;
 			else return this.returnArg(vc, 'VoiceChannel');
 		}
-		if (type === 'durationMS') {
+		if (type === 'duration') {
 			const ms = this.utils.ms(arg);
 
 			if (isNaN(ms)) return null;
@@ -170,6 +170,6 @@ interface ArgTypes {
 	role: Role;
 	VoiceChannel: VoiceChannel;
 	TextChannel: TextChannel;
-	durationMS: number;
+	duration: number;
 	durationDate: Date;
 }
