@@ -26,7 +26,7 @@ export class CooldownManager {
 	 * CooldownManager.create('test', '775265751954096138', 10); // Sets cooldown for 10 seconds.
 	 *```
 	 */
-	public create(command: string, userId: string, cooldown: number) {
+	public async create(command: string, userId: string, cooldown: number) {
 		cooldown = cooldown * 1000;
 		const expires = this.getExpires(cooldown);
 
@@ -38,7 +38,7 @@ export class CooldownManager {
 			remainingTime: this.getRemainingTime(expires),
 		};
 
-		this.db.set(`${command}-${userId}`, newCooldown);
+		await this.db.set(`${command}-${userId}`, newCooldown);
 
 		return newCooldown;
 	}
@@ -157,7 +157,7 @@ export class CooldownManager {
 
 				for (const c of cooldowns) {
 					if (c.expireDate.getTime() <= Date.now()) this.remove(c.command, c.userId);
-					else this.updateTime(c);
+					else await this.updateTime(c);
 				}
 			}, 2000);
 		});
