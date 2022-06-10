@@ -1,5 +1,5 @@
 import { Client } from 'discord.js';
-import db from 'quick.db';
+import { QuickDB } from 'quick.db';
 import { Util } from './Util';
 import pms from 'pretty-ms';
 
@@ -7,9 +7,11 @@ export class CooldownManager {
 	/** Discord Client. */
 	public client: Client;
 	private utils: Util;
+	private db: QuickDB;
 	public constructor(client: Client) {
 		this.client = client;
 		this.utils = new Util(client);
+		this.db = new QuickDB();
 
 		this.init();
 	}
@@ -36,7 +38,7 @@ export class CooldownManager {
 			remainingTime: this.getRemainingTime(expires),
 		};
 
-		db.set(`${command}-${userId}`, newCooldown);
+		this.db.set(`${command}-${userId}`, newCooldown);
 
 		return newCooldown;
 	}
@@ -50,11 +52,11 @@ export class CooldownManager {
 	 * CooldownManager.remove('test', '775265751954096138'); // removes the cooldown.
 	 * ```
 	 */
-	public remove(command: string, userId: string) {
-		const data: Cooldown = this.get(command, userId);
+	public async remove(command: string, userId: string) {
+		const data: Cooldown = await this.get(command, userId);
 		if (!data) return null;
 
-		db.delete(`${command}-${userId}`);
+		this.db.delete(`${command}-${userId}`);
 
 		return data;
 	}
@@ -68,8 +70,8 @@ export class CooldownManager {
 	 * CooldownManager.get('test', '775265751954096138'); // returns cooldown data.
 	 * ```
 	 */
-	public get(command: string, userId: string) {
-		const data: Cooldown = db.get(`${command}-${userId}`);
+	public async get(command: string, userId: string) {
+		const data: Cooldown = await this.db.get(`${command}-${userId}`);
 		if (!data) return null;
 
 		return {
@@ -85,15 +87,20 @@ export class CooldownManager {
 	 *
 	 * Get all cooldowns. This returns an array with all the cooldown data.
 	 */
-	public getAll() {
-		const cooldowns: dbData[] = db.all();
+	public async getAll() {
+		const cooldowns: dbData[] = await this.db.all();
+		const cooldownList: Cooldown[] = [];
 
-		return cooldowns.map((c) => {
-			const [cmd, userId] = c.ID.split('-');
-			const data = this.get(cmd, userId);
+		for (const cooldown of cooldowns) {
+			const [cmd, userId] = cooldown.id.split('-');
+			const data = await this.get(cmd, userId);
 
-			return data;
-		}) as Cooldown[];
+			cooldownList.push(data);
+
+			break;
+		}
+
+		return cooldownList;
 	}
 
 	/**
@@ -112,8 +119,8 @@ export class CooldownManager {
 	 *
 	 * ```
 	 */
-	public onCooldown(command: string, userId: string) {
-		const data: Cooldown = this.get(command, userId);
+	public async onCooldown(command: string, userId: string) {
+		const data: Cooldown = await this.get(command, userId);
 
 		if (data) {
 			const expires = data.expireDate.getTime();
@@ -134,19 +141,19 @@ export class CooldownManager {
 		return this.utils.getExpires(this.utils.getDuration(pms(cooldown)));
 	}
 
-	private updateTime(data: Cooldown) {
+	private async updateTime(data: Cooldown) {
 		const expires = data.expireDate;
 		const now = Date.now();
 
-		if (now < expires.getTime()) db.set(`${data.command}-${data.userId}.remainingTime`, this.getRemainingTime(expires));
+		if (now < expires.getTime()) await this.db.set(`${data.command}-${data.userId}.remainingTime`, this.getRemainingTime(expires));
 
 		return;
 	}
 
 	private init() {
 		this.client.on('ready', () => {
-			setInterval(() => {
-				const cooldowns = this.getAll();
+			setInterval(async () => {
+				const cooldowns = await this.getAll();
 
 				for (const c of cooldowns) {
 					if (c.expireDate.getTime() <= Date.now()) this.remove(c.command, c.userId);
@@ -181,6 +188,6 @@ export interface Cooldown {
 }
 
 export interface dbData {
-	ID: string;
-	data: string;
+	id: string;
+	value: string;
 }
