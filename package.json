@@ -26,17 +26,21 @@
     "@nickdoespackages/prettier-config": "^1.0.1",
     "@nickdoespackages/ts-config": "^1.0.1",
     "@types/glob": "^7.2.0",
+    "bindings": "^1.5.0",
+    "libxmljs": "^0.19.10",
+    "node-gyp": "^9.0.0",
     "ts-node-dev": "^2.0.0"
   },
   "dependencies": {
     "@sapphire/time-utilities": "^1.7.4",
     "axios": "^0.27.2",
-    "discord.js": "^13.8.0",
+    "better-sqlite3": "^7.5.3",
+    "discord.js": "^13.8.1",
     "glob": "^8.0.3",
     "hastebin": "^0.2.1",
     "ms": "^3.0.0-canary.1",
     "pretty-ms": "^7.0.1",
-    "quick.db": "^9.0.2"
+    "quick.db": "^9.0.3"
   },
   "prettier": "@nickdoespackages/prettier-config/v2"
 }
