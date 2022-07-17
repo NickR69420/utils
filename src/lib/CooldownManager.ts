@@ -5,13 +5,12 @@ import pms from 'pretty-ms';
 
 export class CooldownManager {
 	/** Discord Client. */
-	public client: Client;
+	private client: Client;
 	private utils: Util;
-	private db: QuickDB;
+	private db = new QuickDB();
 	public constructor(client: Client) {
 		this.client = client;
 		this.utils = new Util(client);
-		this.db = new QuickDB();
 
 		this.init();
 	}
@@ -109,7 +108,7 @@ export class CooldownManager {
 	 * @param command The command ran.
 	 * @param userId The user's id
 	 * @example```ts
-	 * const cooldown = CooldownManager.onCooldown('test', '775265751954096138');
+	 * const cooldown = await CooldownManager.onCooldown('test', '775265751954096138');
 	 *
 	 * 	if(cooldown) {
 	 *  const seconds = Math.floor(cooldown.remainingTime / 1000);

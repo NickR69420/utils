@@ -98,7 +98,7 @@ export class Args {
 		return missingArgs;
 	}
 
-	private checkArgument(arg: any, type: keyof ArgTypes) {
+	private async checkArgument(arg: any, type: keyof ArgTypes) {
 		if (type === 'string') {
 			if (typeof arg === 'string') return this.returnArg(arg, type);
 			else return null;
@@ -132,13 +132,13 @@ export class Args {
 			else return this.returnArg(role, type);
 		}
 		if (type === 'TextChannel') {
-			const channel = this.utils.fetchChannel(arg, this.message.guild) ?? this.message.mentions.channels.first();
+			const channel = (await this.utils.fetchChannel(arg, this.message.guild)) ?? this.message.mentions.channels.first();
 
 			if (!channel || !channel.isText()) return null;
 			else return this.returnArg(channel, type);
 		}
 		if (type === 'VoiceChannel') {
-			const vc = this.utils.fetchChannel(arg, this.message.guild) ?? this.message.mentions.channels.first();
+			const vc = (await this.utils.fetchChannel(arg, this.message.guild)) ?? this.message.mentions.channels.first();
 
 			if (!vc || !vc.isVoice()) return null;
 			else return this.returnArg(vc, 'VoiceChannel');

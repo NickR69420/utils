@@ -1,4 +1,4 @@
-import { Client, Guild, GuildEmoji, GuildMember, Message, PermissionResolvable, Snowflake, SnowflakeUtil, TextChannel } from 'discord.js';
+import { Client, Guild, GuildEmoji, GuildMember, Message, PermissionResolvable, Role, Snowflake, SnowflakeUtil, TextChannel, User } from 'discord.js';
 import { Duration } from '@sapphire/time-utilities';
 import { createPaste } from 'hastebin';
 import MS, { StringValue } from 'ms';
@@ -19,8 +19,8 @@ export class Util {
 	 * @param filePath The path of the file to import.
 	 * @see Typescript only
 	 */
-	public import<T>(filePath: string): T {
-		return require(filePath)?.default;
+	public async import<T>(filePath: string): Promise<T> {
+		return (await import(filePath))?.default;
 	}
 
 	/**
@@ -28,11 +28,11 @@ export class Util {
 	 * @param mem The ID or name of the member to get.
 	 * @param guild The guild where the member resides.
 	 * @example```ts
-	 * getMember('Nick', message.guild)
+	 * fetchMember('Nick', message.guild);
 	 * ```
 	 */
-	fetchMember(mem: string, guild: Guild) {
-		const member = guild.members.cache.find((m) => m.id === mem || m.user.username === mem || m.displayName === mem || m.user.tag === mem);
+	public async fetchMember(mem: string, guild: Guild): Promise<GuildMember> {
+		const member = (await guild.members.fetch()).find((m) => m.id === mem || m.user.username === mem || m.displayName === mem || m.user.tag === mem);
 		if (member) return member;
 		else return null;
 	}
@@ -42,10 +42,10 @@ export class Util {
 	 * Formats a string.
 	 * @param str String to format.
 	 * @example```ts
-	 * formatString('TEST') // Test
+	 * formatString('TEST'); // Test
 	 * ```
 	 */
-	public formatString(str: string) {
+	public formatString(str: string): string {
 		return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
 	}
 
@@ -57,7 +57,7 @@ export class Util {
 	 * formatPerm("SEND_MESSAGES"); // Send Messages
 	 * ```
 	 */
-	public formatPerm(perm: PermissionResolvable) {
+	public formatPerm(perm: PermissionResolvable): string {
 		const permission = perm.toString().replace(/\_/g, ' ');
 		const split = permission.trim().split(' ');
 		const splitFixed: string[] = [];
@@ -72,10 +72,10 @@ export class Util {
 	 *
 	 * Generates a random ID.
 	 * @example```ts
-	 * generateId() // 928616268376965120
+	 * generateId(); // 928616268376965120
 	 * ```
 	 */
-	public generateId() {
+	public generateId(): string {
 		return SnowflakeUtil.generate().toString();
 	}
 	/**
@@ -84,10 +84,10 @@ export class Util {
 	 * @param content The content for the codeblock.
 	 * @param language The language for the codeblock.
 	 * @example```ts
-	 * codeBlock("console.log('Hello World')", "javascript")
+	 * codeBlock("console.log('Hello World')", "javascript");
 	 * ```
 	 */
-	public codeBlock(content: string, language?: string) {
+	public codeBlock(content: string, language?: string): string {
 		return language ? `\`\`\`${language}\n${content}\`\`\`` : `\`\`\`${content}\`\`\``;
 	}
 
@@ -96,10 +96,10 @@ export class Util {
 	 * Mention a user with ease.
 	 * @param userId The ID of the user to mention.
 	 * @example```ts
-	 * mention('928616268376965120') // <@928616268376965120>
+	 * mention('928616268376965120'); // <@928616268376965120>
 	 * ```
 	 */
-	public mention(userId: Snowflake) {
+	public mention(userId: Snowflake): string {
 		return `<@${userId}>`;
 	}
 
@@ -108,10 +108,10 @@ export class Util {
 	 * Mention a role with ease.
 	 * @param roleId The ID of the role to mention.
 	 * @example```ts
-	 * mentionRole('928616268376965120') // <@&928616268376965120>
+	 * mentionRole('928616268376965120'); // <@&928616268376965120>
 	 * ```
 	 */
-	public mentionRole(roleId: Snowflake) {
+	public mentionRole(roleId: Snowflake): string {
 		return `<@&${roleId}>`;
 	}
 
@@ -121,11 +121,11 @@ export class Util {
 	 * @param ch The Name or ID of the channel.
 	 * @param guild The guild to check.
 	 * @example```ts
-	 * findChannel('general', message.guild)
+	 * fetchChannel('general', message.guild)
 	 * ```
 	 */
-	public fetchChannel(ch: string, guild: Guild) {
-		const channel = guild.channels.cache.find((c) => c.name == ch || c.id === ch) as TextChannel;
+	public async fetchChannel(ch: string, guild: Guild): Promise<TextChannel> {
+		const channel = (await guild.channels.fetch()).find((c) => c.name == ch || c.id === ch) as TextChannel;
 		if (channel) return channel;
 		else return null;
 	}
@@ -136,10 +136,10 @@ export class Util {
 	 * @param message The message to delete.
 	 * @param timeout After how long to delete the message. (In milliseconds)
 	 * @example```ts
-	 * deleteMsg(message, 2000) // Deletes the message after 2 seconds.
+	 * deleteMsg(message, 2000); // Deletes the message after 2 seconds.
 	 * ```
 	 */
-	public deleteMsg(message: Message, timeout?: number) {
+	public deleteMsg(message: Message, timeout?: number): void {
 		if (timeout) {
 			setTimeout(() => {
 				message.delete().catch(() => {});
@@ -157,7 +157,7 @@ export class Util {
 	 * ms('1m') // 60000
 	 * ```
 	 */
-	public ms(value: any) {
+	public ms(value: any): number {
 		return MS(value as StringValue);
 	}
 
@@ -172,7 +172,7 @@ export class Util {
 	 * hasRole(message.member, '928616268376965120', true, message.guild) // returns true
 	 * ```
 	 */
-	public hasRole(member: GuildMember, roleId: string, checkPos?: boolean, guild?: Guild) {
+	public hasRole(member: GuildMember, roleId: string, checkPos?: boolean, guild?: Guild): boolean {
 		if (checkPos && guild) {
 			const role = guild.roles.cache.get(roleId);
 
@@ -188,11 +188,11 @@ export class Util {
 	 * @param role The role's name or id.
 	 * @param guild The guild to find the role in.
 	 * @example```ts
-	 * getRole('Admin', message.guild);
+	 * fetchRole('Admin', message.guild);
 	 * ```
 	 */
-	public fetchRole(role: string, guild: Guild) {
-		const r = guild.roles.cache.find((r) => r.name === role || r.id === role);
+	public async fetchRole(role: string, guild: Guild): Promise<Role> {
+		const r = (await guild.roles.fetch()).find((r) => r.name === role || r.id === role);
 
 		if (!r) return null;
 		else r;
@@ -206,7 +206,7 @@ export class Util {
 	 * hastebin('This is cool.');
 	 * ```
 	 */
-	public async hastebin(content: string) {
+	public async hastebin(content: string): Promise<string> {
 		const url = await createPaste(content, {
 			raw: true,
 			server: 'https://www.toptal.com/developers/hastebin/',
@@ -220,10 +220,10 @@ export class Util {
 	 * Check if a provided duration is valid or not.
 	 * @param time The time to check
 	 * @example```ts
-	 * isValidTime("1h") // true
+	 * isValidTime("1h"); // true
 	 * ```
 	 */
-	public isValidTime(time: string) {
+	public isValidTime(time: string): boolean {
 		if (isNaN(this.ms(time))) return false;
 		else return true;
 	}
@@ -233,10 +233,10 @@ export class Util {
 	 * Converts a duration string into a duration(date form).
 	 * @param time The time to convert into duration.
 	 * @example```ts
-	 * getDuration("1h")
+	 * getDuration("1h");
 	 * ```
 	 */
-	public getDuration(time: string) {
+	public getDuration(time: string): Date {
 		if (!time) return null;
 		return new Duration(time).fromNow || null;
 	}
@@ -246,10 +246,10 @@ export class Util {
 	 * Returns the expiring date.
 	 * @param duration The duration(date form).
 	 * ```
-	 * getExpires(getDuration("1h")) // returns with a date 1 hour from now
+	 * getExpires(getDuration("1h")); // returns with a date 1 hour from now
 	 * ```
 	 */
-	public getExpires(duration: Date) {
+	public getExpires(duration: Date): Date {
 		if (!isNaN(duration.getTime()) && duration.getTime() > Date.now()) {
 			return new Date(duration);
 		} else return null;
@@ -264,7 +264,7 @@ export class Util {
 	 * hasPermission(member, 'ADMINISTRATOR');
 	 * ```
 	 */
-	public hasPermission(member: GuildMember, perm: PermissionResolvable) {
+	public hasPermission(member: GuildMember, perm: PermissionResolvable): boolean {
 		return member.permissions.has(perm);
 	}
 
@@ -273,10 +273,10 @@ export class Util {
 	 * Fetch a user.
 	 * @param Id The user's Id.
 	 * @example```ts
-	 * getUser('928616268376965120');
+	 * fetchUser('928616268376965120');
 	 * ```
 	 */
-	public async getUser(Id: Snowflake) {
+	public async fetchUser(Id: Snowflake): Promise<User> {
 		const user = await this.client.users.fetch(Id);
 
 		if (!user) return null;
@@ -291,7 +291,7 @@ export class Util {
 	 * fetchEmoji('pepe');
 	 * ```
 	 */
-	public fetchEmoji(arg: string) {
+	public fetchEmoji(arg: string): GuildEmoji {
 		const emoji = this.client.emojis.cache.find((e) => e.name === arg || e.id === arg) as GuildEmoji;
 
 		return emoji;
@@ -317,12 +317,12 @@ export class Util {
 	/**
 	 *
 	 * Load some files.
-	 * @param path The path to the files. (use glob pattern.)
+	 * @param path The path to the files. (use glob pattern)
 	 * @example```ts
 	 * await loadFiles(path.join(__dirname, 'commands') + '*{.ts,.js}');
 	 * ```
 	 */
-	public async loadFiles(path: string) {
+	public async loadFiles(path: string): Promise<string[]> {
 		return await load(path);
 	}
 
@@ -333,7 +333,7 @@ export class Util {
 	 * getDirectory('User/Docs/Bot/commands/General/help.js'); // General;
 	 * ```
 	 */
-	public getDirectory(path: string) {
+	public getDirectory(path: string): string {
 		const split = path.split('/');
 		return split[split.length - 2];
 	}
@@ -351,7 +351,7 @@ export class Util {
 	public getApi<T>(api: string): Promise<T> {
 		return new Promise<any>(async (res, rej) => {
 			await axios
-				.get(api)
+				.get<T>(api)
 				.then((response) => {
 					return res(response.data);
 				})
