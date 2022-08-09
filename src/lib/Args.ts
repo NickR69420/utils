@@ -134,13 +134,13 @@ export class Args {
 		if (type === 'TextChannel') {
 			const channel = (await this.utils.fetchChannel(arg, this.message.guild)) ?? this.message.mentions.channels.first();
 
-			if (!channel || !channel.isText()) return null;
+			if (!channel || !channel.isTextBased()) return null;
 			else return this.returnArg(channel, type);
 		}
 		if (type === 'VoiceChannel') {
 			const vc = (await this.utils.fetchChannel(arg, this.message.guild)) ?? this.message.mentions.channels.first();
 
-			if (!vc || !vc.isVoice()) return null;
+			if (!vc || !vc.isVoiceBased()) return null;
 			else return this.returnArg(vc, 'VoiceChannel');
 		}
 		if (type === 'duration') {

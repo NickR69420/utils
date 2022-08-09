@@ -1,4 +1,11 @@
-import { ApplicationCommandData, BaseApplicationCommandOptionsData, ChatInputApplicationCommandData, Client, Snowflake } from 'discord.js';
+import {
+	ApplicationCommandData,
+	ApplicationCommandType,
+	BaseApplicationCommandOptionsData,
+	ChatInputApplicationCommandData,
+	Client,
+	Snowflake,
+} from 'discord.js';
 
 export class SlashCreator {
 	/** Discord Client. */
@@ -14,7 +21,7 @@ export class SlashCreator {
 		let guildCommands = await mainGuild.commands.fetch();
 		if (!guildCommands) return;
 
-		guildCommands = guildCommands.filter((c) => c.type === 'CHAT_INPUT');
+		guildCommands = guildCommands.filter((c) => c.type == ApplicationCommandType.ChatInput);
 		const handledCommands: string[] = [];
 
 		for (const [, gCommand] of guildCommands) {
@@ -56,7 +63,7 @@ export class SlashCreator {
 
 		let appCommands = await application.commands.fetch();
 		if (!appCommands) return;
-		appCommands = appCommands.filter((c) => c.type === 'CHAT_INPUT');
+		appCommands = appCommands.filter((c) => c.type === ApplicationCommandType.ChatInput);
 		const handledCommands: string[] = [];
 
 		for (const [, appCommand] of appCommands) {
@@ -96,7 +103,7 @@ export class SlashCreator {
 		let guildMenus = await mainGuild.commands.fetch();
 		if (!guildMenus) return;
 
-		guildMenus = guildMenus.filter((c) => c.type === 'MESSAGE' || c.type === 'USER');
+		guildMenus = guildMenus.filter((c) => c.type === ApplicationCommandType.Message || c.type === ApplicationCommandType.User);
 		const handledMenus: string[] = [];
 
 		for (const [, gMenu] of guildMenus) {
@@ -106,7 +113,7 @@ export class SlashCreator {
 				break;
 			}
 
-			const type = menu.type === 'MESSAGE' ? 'MESSAGE' : 'USER';
+			const type = menu.type === ApplicationCommandType.Message ? ApplicationCommandType.Message : ApplicationCommandType.User;
 
 			if (menu.name !== gMenu.name) {
 				await mainGuild.commands.edit(gMenu.id, {
@@ -135,7 +142,7 @@ export class SlashCreator {
 		let appMenus = await application.commands.fetch();
 		if (!appMenus) return;
 
-		appMenus = appMenus.filter((m) => m.type !== 'CHAT_INPUT');
+		appMenus = appMenus.filter((m) => m.type !== ApplicationCommandType.ChatInput);
 		const handledMenus: string[] = [];
 
 		for (const [, gMenu] of appMenus) {
@@ -145,7 +152,7 @@ export class SlashCreator {
 				break;
 			}
 
-			const type = menu.type === 'MESSAGE' ? 'MESSAGE' : 'USER';
+			const type = menu.type === ApplicationCommandType.Message ? ApplicationCommandType.Message : ApplicationCommandType.User;
 
 			if (menu.name !== gMenu.name) {
 				await application.commands.edit(gMenu.id, {
