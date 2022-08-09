@@ -20,7 +20,7 @@ export class CooldownManager {
 	 * Create a new cooldown for a user.
 	 * @param command The command.
 	 * @param userId The user's id
-	 * @param cooldown The cooldown in milliseconds.
+	 * @param cooldown The cooldown in seconds.
 	 * @example```ts
 	 * CooldownManager.create('test', '775265751954096138', 10); // Sets cooldown for 10 seconds.
 	 *```
