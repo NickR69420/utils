@@ -1,5 +1,5 @@
 import { Client, Guild, GuildEmoji, GuildMember, Message, PermissionResolvable, Role, Snowflake, SnowflakeUtil, TextChannel, User } from 'discord.js';
-import { Duration } from '@sapphire/time-utilities';
+import { Duration } from '@sapphire/duration';
 import { createPaste } from 'hastebin';
 import MS, { StringValue } from 'ms';
 import glob from 'glob';

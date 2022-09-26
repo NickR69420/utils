@@ -32,11 +32,11 @@
     "ts-node-dev": "^2.0.0"
   },
   "dependencies": {
-    "@sapphire/time-utilities": "^1.7.5",
+    "@sapphire/duration": "^1.0.0",
     "axios": "^0.27.2",
     "better-sqlite3": "^7.6.2",
-    "discord.js": "^14.1.2",
-    "glob": "^8.0.3",
+    "discord.js": "^14.5.0",
+    "glob": "^7.2.0",
     "hastebin": "^0.2.1",
     "ms": "^3.0.0-canary.1",
     "pretty-ms": "^7.0.1",
